@@ -32,9 +32,9 @@ const categories = [
 
   {
     id: 5,
-    title: 'Men',
-    imageUrl: 'http://i.ibb.co/R70vBrQ/men.png',
-    route: 'shop/men',
+    title: 'Mens',
+    imageUrl: 'https://i.ibb.co/R70vBrQ/men.png',
+    route: 'shop/mens',
     
   },
 ];

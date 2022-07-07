@@ -7,8 +7,7 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signOut,
-    onAuthStateChanged,
-    
+    onAuthStateChanged,   
 } from 'firebase/auth';
 
 import {
@@ -49,7 +48,6 @@ export const db = getFirestore();
 export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) =>{
     const batch = writeBatch(db);
     const collectionRef = collection(db, collectionKey);
-   
 
     objectsToAdd.forEach((object) => {
         const docRef = doc(collectionRef, object.title.toLowerCase());
@@ -65,17 +63,11 @@ export const getCategoriesAndDocuments = async () => {
     const q = query(collectionRef);
 
     const querySnapshot = await getDocs(q);
-    const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-        const { title, items } = docSnapshot.data();
-        acc[title.toLowerCase()] = items;
-        return acc;
+    return querySnapshot.docs.map(docSnapshot => docSnapshot.data());
 
-    }, {});
-
-    return categoryMap;
-}
+  };
   
-export const creteUserDocumentFromAuth = async(
+export const createUserDocumentFromAuth = async(
     userAuth,
     additionalInformation = {}
 )=> {
@@ -102,9 +94,7 @@ export const creteUserDocumentFromAuth = async(
 
         }
     }
-
     //if user data exists
-
     return userDocRef;
 
     //return userDocRef
@@ -125,5 +115,4 @@ return await signInWithEmailAndPassword( auth, email, password );
 export const signOutUser = async() => await signOut(auth);
 
 export const onAuthStateChangedListener = (callback) =>
-
- onAuthStateChanged(auth, callback );
+    onAuthStateChanged(auth, callback );
