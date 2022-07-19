@@ -18,9 +18,9 @@ const categories = [
 
   {
     id: 3,
-    title: 'Senakers',
+    title: 'senakers',
     imageUrl: 'http://i.ibb.co/0jqHpnp/sneakers.png',
-    route: 'shop/senakers',
+    route: 'shop/sneakers',
   },
 
   {

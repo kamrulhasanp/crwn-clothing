@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp } from "firebase/app";
 import { 
     getAuth, 
     signInWithRedirect, 
@@ -28,8 +28,7 @@ const firebaseConfig = {
     storageBucket: "crwn-clothing-db-6f484.appspot.com",
     messagingSenderId: "697620727251",
     appId: "1:697620727251:web:dc99f03848f8ed8d871b26"
-};
-  
+  };
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -63,7 +62,7 @@ export const getCategoriesAndDocuments = async () => {
     const q = query(collectionRef);
 
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(docSnapshot => docSnapshot.data());
+    return querySnapshot.docs.map((docSnapshot) => docSnapshot.data());
 
   };
   
@@ -95,7 +94,7 @@ export const createUserDocumentFromAuth = async(
         }
     }
     //if user data exists
-    return userDocRef;
+    return userSnapshot;
 
     //return userDocRef
 
@@ -116,3 +115,16 @@ export const signOutUser = async() => await signOut(auth);
 
 export const onAuthStateChangedListener = (callback) =>
     onAuthStateChanged(auth, callback );
+
+export const getCurrentUser = () => {
+    return new Promise((resolve, reject) =>{
+        const unsubscribe = onAuthStateChanged(
+            auth,
+            (userAuth) => {
+                unsubscribe();
+                resolve(userAuth);
+            },
+            reject
+        );
+    });
+};
