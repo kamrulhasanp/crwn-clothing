@@ -17,7 +17,6 @@ const PaymentForm = () => {
     const [isProcessingPyment, setIsProcessingPayment] = useState(false);
 
     const paymentHandler = async (e) => {
-        console.log('kdfjdskjfkhj');
         e.preventDefault();
         if (!stripe || !elements){
             return;
@@ -26,18 +25,24 @@ const PaymentForm = () => {
         setIsProcessingPayment(true);
 
         const response = await fetch('/.netlify/functions/create-payment-intent', {
-            method: 'POST',
+            method: 'post',
             headers: {
                 'Content-type': 'application/json',
             },
-            body: JSON.stringify({ amount: amount * 100 }),
+            body: JSON.stringify({ amount: amount * 100
+            // discription: 'payment',
+            // address: {
+            //     city: 'Sendai',
+            //     country: 'Japan',
+            //     Postal_code: '9800022',
+            // }
+             }),
         }).then((res) => {
-            res.json();
+           return res.json();
         });
 
         // const {paymentIntent: {client_secret}} =response;
         const clientSecret = response.paymentIntent.client_secret;
-
         const paymentResult = await stripe.confirmCardPayment(clientSecret, {
             payment_method: {
                 card: elements.getElement(CardElement),
@@ -50,9 +55,10 @@ const PaymentForm = () => {
         setIsProcessingPayment(false);
 
         if (paymentResult.error){
+            console.log('fail');
             alert(paymentResult.error.message);
         }else {
-            if(paymentResult.paymentIntent.status === 'succeeded') {
+            if (paymentResult.paymentIntent.status === 'succeeded') {
                 alert('payment successful');
             } 
         }
@@ -65,9 +71,7 @@ const PaymentForm = () => {
                 <CardElement />
                 <PaymentButton
                     buttonType={BUTTON_TYPE_CLASSES.inverted}
-                    isLoading={isProcessingPyment}
-                    type="submit"
-                    
+                    isLoading={isProcessingPyment} 
                 > Pay now 
                 </PaymentButton>
             </FormContainer>
