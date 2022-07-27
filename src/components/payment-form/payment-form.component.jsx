@@ -8,7 +8,7 @@ import { selectCurrentUser } from '../../store/user/user.selector';
 import { BUTTON_TYPE_CLASSES} from '../button/button.component';
 
 import { PaymentFormContainer, FormContainer, PaymentButton } from './payment-form.styles';
-
+// import '../../../netlify/functions/create-payment-intent'
 const PaymentForm = () => {
     const stripe = useStripe();
     const elements = useElements();
@@ -21,27 +21,20 @@ const PaymentForm = () => {
         if (!stripe || !elements){
             return;
         }
-
         setIsProcessingPayment(true);
-
-        const response = await fetch('/.netlify/functions/create-payment-intent', {
+        const response = await fetch(`/.netlify/functions/create-payment-intent`, {
             method: 'post',
             headers: {
                 'Content-type': 'application/json',
             },
-            body: JSON.stringify({ amount: amount * 100
-            // discription: 'payment',
-            // address: {
-            //     city: 'Sendai',
-            //     country: 'Japan',
-            //     Postal_code: '9800022',
-            // }
-             }),
+            body: JSON.stringify({ amount: amount * 100}),
         }).then((res) => {
            return res.json();
+        }).catch((err) => {
+            console.log(err);
         });
+        console.log(response);
 
-        // const {paymentIntent: {client_secret}} =response;
         const clientSecret = response.paymentIntent.client_secret;
         const paymentResult = await stripe.confirmCardPayment(clientSecret, {
             payment_method: {
